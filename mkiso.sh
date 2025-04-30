@@ -137,12 +137,12 @@ build_variant() {
             SERVICES="$SERVICES dhcpcd wpa_supplicant acpid"
         ;;
         enlightenment)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter enlightenment terminology udisks2 firefox"
+            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter enlightenment terminology udisks2"
             SERVICES="$SERVICES acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
             LIGHTDM_SESSION=enlightenment
         ;;
         xfce*)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter xfce4 gnome-themes-standard gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox xfce4-pulseaudio-plugin"
+            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter xfce4 gnome-themes-standard gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 xfce4-pulseaudio-plugin"
             SERVICES="$SERVICES dbus lightdm NetworkManager polkitd"
             LIGHTDM_SESSION=xfce
 
@@ -152,30 +152,30 @@ build_variant() {
             fi
         ;;
         mate)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter mate mate-extra gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
+            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter mate mate-extra gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2"
             SERVICES="$SERVICES dbus lightdm NetworkManager polkitd"
             LIGHTDM_SESSION=mate
         ;;
         cinnamon)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter cinnamon gnome-keyring colord gnome-terminal gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
+            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter cinnamon gnome-keyring colord gnome-terminal gvfs-afc gvfs-mtp gvfs-smb udisks2"
             SERVICES="$SERVICES dbus lightdm NetworkManager polkitd"
             LIGHTDM_SESSION=cinnamon
         ;;
         gnome)
-            PKGS="$PKGS $XORG_PKGS gnome firefox"
+            PKGS="$PKGS $XORG_PKGS gnome"
             SERVICES="$SERVICES dbus gdm NetworkManager polkitd"
         ;;
         kde)
-            PKGS="$PKGS $XORG_PKGS kde5 konsole firefox dolphin NetworkManager"
+            PKGS="$PKGS $XORG_PKGS kde5 konsole dolphin NetworkManager"
             SERVICES="$SERVICES dbus NetworkManager sddm"
         ;;
         lxde)
-            PKGS="$PKGS $XORG_PKGS lxde lightdm lightdm-gtk-greeter gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
+            PKGS="$PKGS $XORG_PKGS lxde lightdm lightdm-gtk-greeter gvfs-afc gvfs-mtp gvfs-smb udisks2"
             SERVICES="$SERVICES acpid dbus dhcpcd wpa_supplicant lightdm polkitd"
             LIGHTDM_SESSION=LXDE
         ;;
         lxqt)
-            PKGS="$PKGS $XORG_PKGS lxqt sddm gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
+            PKGS="$PKGS $XORG_PKGS lxqt sddm gvfs-afc gvfs-mtp gvfs-smb udisks2"
             SERVICES="$SERVICES dbus dhcpcd wpa_supplicant sddm polkitd"
         ;;
         *)

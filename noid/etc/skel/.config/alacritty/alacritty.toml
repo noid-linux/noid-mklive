@@ -1,0 +1,20 @@
+general.import = [
+    "~/.config/alacritty/themes/gruvbox_dark.toml"
+]
+
+[font]
+normal = { family = "CaskaydiaCove Nerd Font", style = "normal" }
+bold = { family = "CaskaydiaCove Nerd Font", style = "bold" }
+italic = { family = "CaskaydiaCove Nerd Font", style = "italic" }
+bold_italic = { family = "CaskaydiaCove Nerd Font", style = "bold_italic" }
+size = 13
+
+[cursor]
+style = { shape="Underline", blinking="Always" }
+
+[window]
+padding = { x = 0 , y = 6 }
+opacity = 0.9
+
+[env]
+TERM = "xterm-256color"
