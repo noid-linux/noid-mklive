@@ -36,7 +36,7 @@ jobs:
       - name: Build Noid Linux ISO
         run: |
           cd void-mklive
-          yes | ./mkiso.sh -a x86_64 -b xfce-wayland -r "https://github.com/ndpm13/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
+          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/ndpm13/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
       - name: Create release tag
         id: create_tag
@@ -53,7 +53,7 @@ jobs:
           name: Noid Linux Release ${{ steps.create_tag.outputs.release_tag }}
           body: |
             Noid Linux ISO Build
-            - Based on Void Linux (XFCE Wayland)
+            - Based on Void Linux (XFCE)
             - Pre-installed packages: neovim, alacritty, starship, brave
             - Linux kernel: linux-lts
           files: /github/workspace/images/noid.iso
