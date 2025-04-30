@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="https://files.catbox.moe/8mf3jn.png" alt="Banner" height="200">
+</div>
+
 Noid Linux (Naz's Void Linux-based iso) is my personal customization of Void Linux. It's tailored to my preferences and comes with a custom XBPS repository enabled out of the box.
 
 ## Features
