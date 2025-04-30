@@ -9,6 +9,10 @@ Noid Linux (Naz's Void Linux-based iso) is my personal customization of Void Lin
 
 This is primarily a personal project that I use for my own systems. The repository is public for reference and transparency, but I maintain it according to my own needs and preferences. While I'm happy to accept pull requests that align with the project's direction, significant changes or improvements may be better implemented by forking this project.
 
+## Screeshot
+
+![Noid Linux](https://files.catbox.moe/ijhesh.png)
+
 ## License
 
 This project is licensed under the same terms as Void Linux's void-mklive.
