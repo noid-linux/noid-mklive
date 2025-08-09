@@ -17,14 +17,14 @@ jobs:
           xbps-install -yu
           xbps-install -y git bash make cdrtools qemu-user-static liblz4 squashfs-tools xorriso xmlto python3 python3-Markdown
 
-      - name: Clone void-mklive repository
+      - name: Clone noid-mklive repository
         run: |
-          git clone https://github.com/ndpm13/void-mklive.git
-          cd void-mklive
+          git clone https://github.com/noid-linux/noid-mklive.git
+          cd noid-mklive
 
       - name: Set up permissions
         run: |
-          cd void-mklive
+          cd noid-mklive
           chmod +x ./mkiso.sh
           chmod +x ./mklive.sh
           chmod +x ./mkrootfs.sh
@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Noid Linux ISO
         run: |
-          cd void-mklive
+          cd noid-mklive
           yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts ndpm" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
       - name: Create release tag
