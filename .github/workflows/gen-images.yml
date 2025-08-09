@@ -37,7 +37,7 @@ jobs:
       - name: Build Noid Linux ISO
         run: |
           cd void-mklive
-          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/ndpm13/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
+          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
       - name: Create release tag
         id: create_tag
