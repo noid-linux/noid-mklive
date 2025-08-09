@@ -2,6 +2,8 @@
     <img src="https://files.catbox.moe/f6vmte.jpg" alt="Banner">
 </div>
 
+[![Build noid images](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml/badge.svg)](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml) [![Download Noid Linux](https://img.shields.io/sourceforge/dt/noid-linux.svg)](https://sourceforge.net/projects/noid-linux/files/latest/download)
+
 Noid Linux (Naz's Void Linux-based iso) is my personal customization of Void Linux. It's tailored to my preferences and comes with a custom XBPS repository enabled out of the box.
 
 ## Features
