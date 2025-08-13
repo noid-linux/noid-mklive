@@ -1,3 +1,2 @@
 TerminalEmulator=alacritty
-WebBrowser=custom-WebBrowser
-
+WebBrowser=brave
