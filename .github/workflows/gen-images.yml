@@ -40,7 +40,7 @@ jobs:
       - name: Build Noid Linux ISO
         run: |
           cd noid-mklive
-          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
+          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm flatpak" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
       - name: Create release tag
         id: create_tag
@@ -58,7 +58,7 @@ jobs:
           body: |
             Noid Linux ISO Build
             - Based on Void Linux (XFCE)
-            - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm
+            - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm, flatpak
             - Linux kernel: linux-lts
             
             [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
