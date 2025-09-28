@@ -9,6 +9,8 @@ permissions:
 jobs:
   build-iso:
     runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.create_tag.outputs.release_tag }}
     container:
       image: ghcr.io/void-linux/void-mklive:20250116R1
       options: --privileged
@@ -42,6 +44,13 @@ jobs:
           cd noid-mklive
           yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm flatpak gparted noid-welcome" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
+      - name: Upload built ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-iso
+          path: /github/workspace/images/noid.iso
+          retention-days: 1
+
       - name: Create release tag
         id: create_tag
         run: |
@@ -49,12 +58,23 @@ jobs:
           DATE=$(date +"%Y%m%d")
           echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
 
+  create-github-release:
+    needs: build-iso
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: built-iso
+          path: ./images/
+
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.create_tag.outputs.release_tag }}
-          name: Noid Linux Release ${{ steps.create_tag.outputs.release_tag }}
+          tag_name: ${{ needs.build-iso.outputs.release_tag }}
+          name: Noid Linux Release ${{ needs.build-iso.outputs.release_tag }}
           body: |
             Noid Linux ISO Build
             - Based on Void Linux (XFCE)
@@ -62,8 +82,51 @@ jobs:
             - Linux kernel: linux-lts
 
             [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
-          files: /github/workspace/images/noid.iso
+          files: ./images/noid.iso
           draft: true
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # create-forgejo-release:
+  #   needs: build-iso
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Install tea
+  #       run: |
+  #         curl -sL https://dl.gitea.io/tea/main/tea-main-linux-amd64 -o tea
+  #         chmod +x tea
+  #         sudo mv tea /usr/local/bin/
+
+  #     - name: Configure tea
+  #       run: |
+  #         tea login add \
+  #           --name "github-actions" \
+  #           --url "https://git.ch-naseem.com" \
+  #           --token "${{ secrets.FORGEJO_TOKEN }}"
+  #       env:
+  #         FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+
+  #     - name: Download built ISO
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: built-iso
+  #         path: ./images/
+
+  #     - name: Create Release
+  #       env:
+  #         FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+  #       run: |
+  #         tea release create \
+  #           -l "github-actions" \
+  #           --repo noid-linux/noid-mklive \
+  #           -p \
+  #           --title "Noid Linux Release ${{ needs.build-iso.outputs.release_tag }}" \
+  #           --note "Noid Linux ISO Build
+  #           - Based on Void Linux (XFCE)
+  #           - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm, flatpak, gparted
+  #           - Linux kernel: linux-lts
+
+  #           [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)" \
+  #           --asset ./images/noid.iso \
+  #           ${{ needs.build-iso.outputs.release_tag }}
