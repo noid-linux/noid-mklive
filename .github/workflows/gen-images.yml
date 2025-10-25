@@ -42,7 +42,7 @@ jobs:
       - name: Build Noid Linux ISO
         run: |
           cd noid-mklive
-          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm flatpak gparted noid-welcome" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
+          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm flatpak gparted noid-welcome calamares" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
 
       - name: Upload built ISO
         uses: actions/upload-artifact@v4
@@ -80,11 +80,12 @@ jobs:
             - Based on Void Linux (XFCE)
             - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm, flatpak, gparted
             - Linux kernel: linux-lts
+            - Graphical Installer: Calamares
 
             [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
           files: ./images/noid.iso
-          draft: true
-          prerelease: false
+          draft: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
