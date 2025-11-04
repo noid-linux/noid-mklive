@@ -179,15 +179,15 @@ info_msg "Reconfiguring packages for ${XBPS_TARGET_ARCH} ..."
 # architecture, but we may need to set up XBPS_ARCH for the target
 # architecture (but only when compatible).
 if is_target_native "$XBPS_TARGET_ARCH"; then
-    run_cmd_target "xbps-reconfigure --rootdir $ROOTFS base-files"
+    run_cmd_target "xbps-reconfigure --rootdir $ROOTFS noid-base-files"
 else
-    run_cmd "xbps-reconfigure --rootdir $ROOTFS base-files"
+    run_cmd "xbps-reconfigure --rootdir $ROOTFS noid-base-files"
 fi
 
 # Now running as the target system, this step reconfigures the
 # base-files completely.  Certain things just won't work in the first
 # pass, so this cleans up any issues that linger.
-run_cmd_chroot "$ROOTFS" "env -i xbps-reconfigure -f base-files"
+run_cmd_chroot "$ROOTFS" "env -i xbps-reconfigure -f noid-base-files"
 
 # Once base-files is configured and functional its possible to
 # configure the rest of the system.

@@ -30,7 +30,7 @@ ALL_PXE_ARCHS=$(foreach arch,$(PXE_ARCHS),void-$(arch)-NETBOOT-$(DATECODE).tar.g
 SUDO := sudo
 
 REPOSITORY := https://repo-default.voidlinux.org/current
-XBPS_REPOSITORY := -r $(REPOSITORY) -r $(REPOSITORY)/musl -r $(REPOSITORY)/aarch64
+XBPS_REPOSITORY := -r $(REPOSITORY) -r $(REPOSITORY)/musl -r $(REPOSITORY)/aarch64 -r https://github.com/noid-linux/xbps-repo/releases/latest/download
 COMPRESSOR_THREADS:=$(shell nproc)
 
 all:

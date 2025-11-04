@@ -28,8 +28,8 @@ umask 022
 
 . ./lib.sh
 
-REQUIRED_PKGS=(base-files libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
-TARGET_PKGS=(base-files)
+REQUIRED_PKGS=(noid-base-files libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
+TARGET_PKGS=(noid-base-files)
 INITRAMFS_PKGS=(binutils xz device-mapper dhclient dracut-network openresolv)
 PACKAGE_LIST=(jq)
 IGNORE_PKGS=()
@@ -157,8 +157,8 @@ install_packages() {
         ${XBPS_REPOSITORY} -c "$XBPS_CACHEDIR" -y "${PACKAGE_LIST[@]}" "${INITRAMFS_PKGS[@]}"
     [ $? -ne 0 ] && die "Failed to install ${PACKAGE_LIST[*]} ${INITRAMFS_PKGS[*]}"
 
-    xbps-reconfigure -r "$ROOTFS" -f base-files >/dev/null 2>&1
-    chroot "$ROOTFS" env -i xbps-reconfigure -f base-files
+    xbps-reconfigure -r "$ROOTFS" -f noid-base-files >/dev/null 2>&1
+    chroot "$ROOTFS" env -i xbps-reconfigure -f noid-base-files
 
     # Enable choosen UTF-8 locale and generate it into the target rootfs.
     if [ -f "$ROOTFS"/etc/default/libc-locales ]; then
@@ -216,6 +216,9 @@ generate_initramfs() {
 
     copy_dracut_files "$ROOTFS"
     copy_autoinstaller_files "$ROOTFS"
+
+    mkdir -p "$ROOTFS/var/tmp"
+
     chroot "$ROOTFS" env -i /usr/bin/dracut -N --"${INITRAMFS_COMPRESSION}" \
         --add-drivers "ahci" --force-add "vmklive autoinstaller" --omit systemd "/boot/initrd" $KERNELVERSION
     [ $? -ne 0 ] && die "Failed to generate the initramfs"
