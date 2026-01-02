@@ -42,7 +42,7 @@ jobs:
       - name: Build Noid Linux ISO
         run: |
           cd noid-mklive
-          yes | ./mkiso.sh -a x86_64 -b xfce -r "https://github.com/noid-linux/xbps-repo/releases/latest/download" -- -p "neovim alacritty starship brave gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode ndpm flatpak gparted noid-welcome calamares" -I noid -C "live.autologin" -T "Noid Linux" -v "linux-lts" -o /github/workspace/images/noid.iso
+          ./mknoid.sh ci
 
       - name: Upload built ISO
         uses: actions/upload-artifact@v4
