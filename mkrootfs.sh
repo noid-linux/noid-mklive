@@ -60,7 +60,7 @@ usage() {
 	 riscv64, riscv64-musl
 	
 	OPTIONS
-	 -b <system-pkg>  Set an alternative base-system package (default: base-container-full)
+	 -b <system-pkg>  Set an alternative noid-base-system package (default: base-container-full)
 	 -c <cachedir>    Set XBPS cache directory (default: ./xbps-cachedir-<arch>)
 	 -C <file>        Full path to the XBPS configuration file
 	 -r <repo>        Use this XBPS repository. May be specified multiple times
@@ -173,23 +173,23 @@ fi
 # same as the host, this needs to be done via qemu.
 info_msg "Reconfiguring packages for ${XBPS_TARGET_ARCH} ..."
 
-# This step sets up enough of the base-files that the chroot will work
+# This step sets up enough of the noid-base-files that the chroot will work
 # and they can be reconfigured natively.  Without this step there
 # isn't enough configured for ld to work.  This step runs as the host
 # architecture, but we may need to set up XBPS_ARCH for the target
 # architecture (but only when compatible).
 if is_target_native "$XBPS_TARGET_ARCH"; then
-    run_cmd_target "xbps-reconfigure --rootdir $ROOTFS base-files"
+    run_cmd_target "xbps-reconfigure --rootdir $ROOTFS noid-base-files"
 else
-    run_cmd "xbps-reconfigure --rootdir $ROOTFS base-files"
+    run_cmd "xbps-reconfigure --rootdir $ROOTFS noid-base-files"
 fi
 
 # Now running as the target system, this step reconfigures the
-# base-files completely.  Certain things just won't work in the first
+# noid-base-files completely.  Certain things just won't work in the first
 # pass, so this cleans up any issues that linger.
-run_cmd_chroot "$ROOTFS" "env -i xbps-reconfigure -f base-files"
+run_cmd_chroot "$ROOTFS" "env -i xbps-reconfigure -f noid-base-files"
 
-# Once base-files is configured and functional its possible to
+# Once noid-base-files is configured and functional its possible to
 # configure the rest of the system.
 run_cmd_chroot "$ROOTFS" "xbps-reconfigure -a"
 
@@ -199,11 +199,11 @@ run_cmd_chroot "$ROOTFS" "xbps-reconfigure -a"
 # chrooted.  We also remove the lock file in this step to clean up the
 # lock on the passwd database, lest it be left in the system and
 # propogated to other points.
-info_msg "Setting the default root password ('voidlinux')"
+info_msg "Setting the default root password ('noidlinux')"
 if [ ! -f "$ROOTFS/etc/shadow" ] ; then
     run_cmd_chroot "$ROOTFS" pwconv
 fi
-echo root:voidlinux | run_cmd_chroot "$ROOTFS" "chpasswd -c SHA512" || die "Could not set default credentials"
+echo root:noidlinux | run_cmd_chroot "$ROOTFS" "chpasswd -c SHA512" || die "Could not set default credentials"
 rm -f "$ROOTFS/etc/.pwd.lock"
 
 # At this point we're done running things in the chroot and we can

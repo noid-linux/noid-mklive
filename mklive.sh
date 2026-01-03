@@ -28,8 +28,8 @@ umask 022
 
 . ./lib.sh
 
-REQUIRED_PKGS=(base-files libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
-TARGET_PKGS=(base-files)
+REQUIRED_PKGS=(noid-base-files libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
+TARGET_PKGS=(noid-base-files)
 INITRAMFS_PKGS=(binutils xz device-mapper dhclient dracut-network openresolv)
 PACKAGE_LIST=(jq)
 IGNORE_PKGS=()
@@ -81,7 +81,7 @@ usage() {
 
 	OPTIONS
 	 -a <arch>          Set XBPS_ARCH in the ISO image
-	 -b <system-pkg>    Set an alternative base package (default: base-system)
+	 -b <system-pkg>    Set an alternative base package (default: noid-base-system)
 	 -r <repo>          Use this XBPS repository. May be specified multiple times
 	 -c <cachedir>      Use this XBPS cache directory (default: ./xbps-cachedir-<arch>)
 	 -H <host_cachedir> Use this Host XBPS cache directory (default: ./xbps-cachedir-<host_arch>)
@@ -160,8 +160,8 @@ install_packages() {
         ${XBPS_REPOSITORY} -c "$XBPS_CACHEDIR" -y "${PACKAGE_LIST[@]}" "${INITRAMFS_PKGS[@]}"
     [ $? -ne 0 ] && die "Failed to install ${PACKAGE_LIST[*]} ${INITRAMFS_PKGS[*]}"
 
-    xbps-reconfigure -r "$ROOTFS" -f base-files >/dev/null 2>&1
-    chroot "$ROOTFS" env -i xbps-reconfigure -f base-files
+    xbps-reconfigure -r "$ROOTFS" -f noid-base-files >/dev/null 2>&1
+    chroot "$ROOTFS" env -i xbps-reconfigure -f noid-base-files
 
     # Enable choosen UTF-8 locale and generate it into the target rootfs.
     if [ -f "$ROOTFS"/etc/default/libc-locales ]; then
@@ -531,7 +531,7 @@ while getopts "a:b:r:H:c:C:T:Kk:l:i:I:S:e:s:o:p:g:v:P:x:Vh" opt; do
 	esac
 done
 shift $((OPTIND - 1))
-XBPS_REPOSITORY="$XBPS_REPOSITORY --repository=https://repo-default.voidlinux.org/current --repository=https://repo-default.voidlinux.org/current/musl --repository=https://repo-default.voidlinux.org/current/aarch64"
+XBPS_REPOSITORY="$XBPS_REPOSITORY --repository=https://github.com/noid-linux/xbps-repo/releases/latest/download --repository=https://repo-default.voidlinux.org/current --repository=https://repo-default.voidlinux.org/current/musl --repository=https://repo-default.voidlinux.org/current/aarch64"
 
 # Configure dracut to use overlayfs for the writable overlay.
 BOOT_CMDLINE="$BOOT_CMDLINE rd.live.overlay.overlayfs=1 "
@@ -546,7 +546,7 @@ HOST_ARCH=$(xbps-uhelper arch)
 : ${LOCALE:=en_US.UTF-8}
 : ${INITRAMFS_COMPRESSION:=xz}
 : ${SQUASHFS_COMPRESSION:=xz}
-: ${BASE_SYSTEM_PKG:=base-system}
+: ${BASE_SYSTEM_PKG:=noid-base-system}
 : ${BOOT_TITLE:="Void Linux"}
 : ${LINUX_VERSION:=linux}
 
