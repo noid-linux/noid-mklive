@@ -91,7 +91,7 @@ VAI_install_base_system() {
         _grub="${_grub} grub-x86_64-efi"
     fi
 
-    XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt base-system ${_grub}
+    XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-base-system ${_grub}
 
     # Install additional packages
     if [  -n "${pkgs}" ] ; then

@@ -1246,7 +1246,7 @@ install_packages() {
         fi
     fi
 
-    _syspkg="base-system"
+    _syspkg="noid-base-system"
 
     mkdir -p $TARGETDIR/var/db/xbps/keys $TARGETDIR/usr/share
     cp -a /usr/share/xbps.d $TARGETDIR/usr/share/
@@ -1266,7 +1266,7 @@ install_packages() {
     if [ $? -ne 0 ]; then
         DIE 1
     fi
-    xbps-reconfigure -r $TARGETDIR -f base-files >/dev/null 2>&1
+    xbps-reconfigure -r $TARGETDIR -f noid-base-files >/dev/null 2>&1
     stdbuf -oL chroot $TARGETDIR xbps-reconfigure -a 2>&1 | \
         DIALOG --title "Configuring base system packages..." --programbox 24 80
     if [ $? -ne 0 ]; then

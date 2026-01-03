@@ -56,7 +56,7 @@ usage() {
 	                     pinebookpro, pinephone, rock64, rockpro64, asahi
 
 	OPTIONS
-	 -b <system-pkg>  Set an alternative base-system package (default: base-system)
+	 -b <system-pkg>  Set an alternative noid-base-system package (default: noid-base-system)
 	 -c <cachedir>    Set the XBPS cache directory (default: ./xbps-cachedir-<arch>)
 	 -C <file>        Full path to the XBPS configuration file
 	 -k <cmd>         Call '<cmd> <ROOTFSPATH>' after building the ROOTFS
@@ -74,7 +74,7 @@ usage() {
 #      SCRIPT EXECUTION STARTS HERE
 # ########################################
 
-BASEPKG=base-system
+BASEPKG=noid-base-system
 COMPRESSION="y"
 
 while getopts "b:p:k:c:C:r:x:o:nhV" opt; do
