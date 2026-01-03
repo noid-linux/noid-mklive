@@ -500,6 +500,7 @@ menu_partitions() {
 
         DIALOG --title " Select the software for partitioning " \
             --menu "$MENULABEL" ${MENUSIZE} \
+            "gparted" "Graphical partitioner" \
             "cfdisk" "Easy to use" \
             "fdisk" "More advanced"
         if [ $? -eq 0 ]; then
