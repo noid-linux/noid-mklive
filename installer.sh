@@ -787,6 +787,11 @@ set_useraccount() {
         -c "$(get_option USERNAME)" "$(get_option USERLOGIN)"
     echo "$(get_option USERLOGIN):$(get_option USERPASSWORD)" | \
         chroot $TARGETDIR chpasswd -c SHA512
+
+    local userlogin="$(get_option USERLOGIN)"
+    mkdir -p "$TARGETDIR/home/$userlogin/.config/autostart/"
+    cp /usr/share/applications/noid-welcome.desktop "$TARGETDIR/home/$userlogin/.config/autostart/"
+    chroot $TARGETDIR chown -R "$userlogin:$userlogin" "/home/$userlogin/.config"
 }
 
 menu_bootloader() {
