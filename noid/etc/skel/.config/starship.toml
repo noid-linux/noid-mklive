@@ -1,0 +1,24 @@
+# Inserts a blank line between shell prompts
+add_newline = false
+
+[character]
+success_symbol = "[](fg:#ebdbb2 bold)"
+error_symbol = "[](red)"
+vicmd_symbol = "[](bold fg:#a89984)"
+
+[directory]
+truncation_length = 5
+format = "[  ](bold fg:#a89984)[ $path ](bold fg:green)[$read_only]($read_only)"
+
+[git_branch]
+format = "on [$symbol$branch ](bold yellow)"
+
+[line_break]
+disabled = true
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[rust]
+symbol = '󱘗 '
