@@ -51,7 +51,7 @@ jobs:
           path: /github/workspace/images/*.iso
           retention-days: 1
 
-  create-github-release:
+  upload-to-sf:
     needs: build-live-iso
     runs-on: ubuntu-latest
 
@@ -81,23 +81,19 @@ jobs:
           DATE=$(date +"%Y%m%d")
           echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.create_tag.outputs.release_tag }}
-          name: Noid Linux Release ${{ steps.create_tag.outputs.release_tag }}
-          body: |
-            Noid Linux ISO Build
-            - Based on Void Linux
-            - Available in XFCE and KDE variants
-            - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm, flatpak, gparted
-            - Linux kernel: linux-lts
-            - Graphical Installer: Calamares
-
-            [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
-          files: ./images/*.iso
-          draft: false
-          prerelease: true
+      - name: Upload to SourceForge
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SF_SSH_KEY: ${{ secrets.SF_SSH_KEY }}
+        run: |
+          # Setup SSH key
+          mkdir -p ~/.ssh
+          echo "$SF_SSH_KEY" > ~/.ssh/sf_key
+          chmod 600 ~/.ssh/sf_key
+
+          # Add SourceForge to known hosts
+          ssh-keyscan frs.sourceforge.net >> ~/.ssh/known_hosts
+
+          # Upload ISOs via rsync
+          rsync -avP -e "ssh -i ~/.ssh/sf_key" \
+              ./images/*.iso \
+              ndpm13@frs.sourceforge.net:/home/frs/project/noid-linux/${{ steps.create_tag.outputs.release_tag }}
