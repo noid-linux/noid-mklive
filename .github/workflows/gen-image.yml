@@ -16,10 +16,11 @@ permissions:
 
 jobs:
   build-live-iso:
-    name: Build Live ISOs
+    name: Build Live ISO (${{ matrix.de }})
     runs-on: ubuntu-latest
-    outputs:
-      release_tag: ${{ steps.create_tag.outputs.release_tag }}
+    strategy:
+      matrix:
+        de: [xfce, kde, gnome]
     container:
       image: "ghcr.io/void-linux/void-mklive:20250116R1"
       options: --privileged
@@ -41,21 +42,14 @@ jobs:
         uses: classabbyamp/treeless-checkout-action@v1
 
       - name: Build live ISO
-        run: ./mknoid.sh /github/workspace/images/noid.iso
+        run: ./mknoid.sh ${{ matrix.de }} /github/workspace/images/noid-${{ matrix.de }}.iso
 
       - name: Upload built ISO
         uses: actions/upload-artifact@v4
         with:
-          name: built-iso
-          path: /github/workspace/images/noid.iso
+          name: noid-${{ matrix.de }}-iso
+          path: /github/workspace/images/*.iso
           retention-days: 1
-
-      - name: Create release tag
-        id: create_tag
-        run: |
-          # Get current date in YYYYMMDD format
-          DATE=$(date +"%Y%m%d")
-          echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
 
   create-github-release:
     needs: build-live-iso
@@ -65,24 +59,44 @@ jobs:
       - name: Download built ISO
         uses: actions/download-artifact@v4
         with:
-          name: built-iso
+          name: noid-xfce-iso
           path: ./images/
+
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: noid-gnome-iso
+          path: ./images/
+
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: noid-kde-iso
+          path: ./images/
+
+      - name: Create release tag
+        id: create_tag
+        run: |
+          # Get current date in YYYYMMDD format
+          DATE=$(date +"%Y%m%d")
+          echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.build-live-iso.outputs.release_tag }}
-          name: Noid Linux Release ${{ needs.build-live-iso.outputs.release_tag }}
+          tag_name: ${{ steps.create_tag.outputs.release_tag }}
+          name: Noid Linux Release ${{ steps.create_tag.outputs.release_tag }}
           body: |
             Noid Linux ISO Build
-            - Based on Void Linux (XFCE)
+            - Based on Void Linux
+            - Available in XFCE and KDE variants
             - Pre-installed packages: neovim, alacritty, starship, brave, nerd-fonts-cascadiacode, ndpm, flatpak, gparted
             - Linux kernel: linux-lts
             - Graphical Installer: Calamares
 
             [![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
-          files: ./images/noid.iso
+          files: ./images/*.iso
           draft: false
           prerelease: true
         env:
