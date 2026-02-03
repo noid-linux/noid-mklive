@@ -1,0 +1,100 @@
+name: Build noid image
+
+on:
+  schedule:
+    - cron: "0 0 * * 5"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: write
+
+jobs:
+  build-live-iso:
+    name: Build Live ISO (${{ matrix.de }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        de: [xfce, kde, gnome]
+    container:
+      image: "ghcr.io/void-linux/void-mklive:20250116R1"
+      options: --privileged
+      volumes:
+        - /dev:/dev
+      env:
+        PATH: "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/bin:/tmp/bin"
+
+    steps:
+      - name: Prepare container
+        shell: sh
+        run: xbps-install -Syu xbps && xbps-install -yu
+
+      - name: Create output directory
+        run: |
+          mkdir -p /github/workspace/images
+
+      - name: Clone and checkout
+        uses: classabbyamp/treeless-checkout-action@v1
+
+      - name: Build live ISO
+        run: ./mknoid.sh ${{ matrix.de }} /github/workspace/images/noid-${{ matrix.de }}-weekly.iso
+
+      - name: Upload built ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: noid-${{ matrix.de }}-iso
+          path: /github/workspace/images/*.iso
+          retention-days: 1
+
+  upload-to-sf:
+    needs: build-live-iso
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: noid-xfce-iso
+          path: ./images/
+
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: noid-gnome-iso
+          path: ./images/
+
+      - name: Download built ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: noid-kde-iso
+          path: ./images/
+
+      - name: Create release tag
+        id: create_tag
+        run: |
+          # Get current date in YYYYMMDD format
+          DATE=$(date +"%Y%m%d")
+          echo "release_tag=noid-linux-weekly-${DATE}" >> $GITHUB_OUTPUT
+
+      - name: Upload to SourceForge
+        env:
+          SF_SSH_KEY: ${{ secrets.SF_SSH_KEY }}
+        run: |
+          # Setup SSH key
+          mkdir -p ~/.ssh
+          echo "$SF_SSH_KEY" > ~/.ssh/sf_key
+          chmod 600 ~/.ssh/sf_key
+
+          # Add SourceForge to known hosts
+          ssh-keyscan frs.sourceforge.net >> ~/.ssh/known_hosts
+
+          # Upload ISOs via rsync
+          rsync -avP -e "ssh -i ~/.ssh/sf_key" \
+              ./images/*.iso \
+              ndpm13@frs.sourceforge.net:/home/frs/project/noid-linux/${{ steps.create_tag.outputs.release_tag }}
