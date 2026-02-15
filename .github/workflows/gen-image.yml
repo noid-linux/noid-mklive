@@ -51,28 +51,17 @@ jobs:
           path: /github/workspace/images/*.iso
           retention-days: 1
 
-  upload-to-sf:
+  upload-to-sf-and-r2:
     needs: build-live-iso
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download built ISO
+      - name: Download built ISOs
         uses: actions/download-artifact@v4
         with:
-          name: noid-xfce-iso
+          pattern: noid-*-iso
           path: ./images/
-
-      - name: Download built ISO
-        uses: actions/download-artifact@v4
-        with:
-          name: noid-gnome-iso
-          path: ./images/
-
-      - name: Download built ISO
-        uses: actions/download-artifact@v4
-        with:
-          name: noid-kde-iso
-          path: ./images/
+          merge-multiple: true
 
       - name: Create release tag
         id: create_tag
@@ -80,6 +69,35 @@ jobs:
           # Get current date in YYYYMMDD format
           DATE=$(date +"%Y%m%d")
           echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
+
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+
+      - name: Configure rclone for R2
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          mkdir -p ~/.config/rclone
+          cat << EOF > ~/.config/rclone/rclone.conf
+          [r2]
+          type = s3
+          provider = Cloudflare
+          access_key_id = ${R2_ACCESS_KEY_ID}
+          secret_access_key = ${R2_SECRET_ACCESS_KEY}
+          endpoint = https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com
+          acl = public-read
+          EOF
+
+      - name: Delete all old releases (R2)
+        run: rclone delete r2:noid-linux/ --rmdirs
+
+      - name: Upload to R2
+        run: |
+          rclone copy ./images/ r2:noid-linux/ --progress \
+            --s3-upload-concurrency 4
 
       - name: Upload to SourceForge
         env:
