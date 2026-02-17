@@ -70,9 +70,23 @@ jobs:
           DATE=$(date +"%Y%m%d")
           echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
 
-      - name: Install rclone
+      - name: Generate SHA256 checksums
+        working-directory: ./images
+        run: sha256sum *.iso > sha256sum.txt
+
+      - name: Sign checksums
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          curl https://rclone.org/install.sh | sudo bash
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          gpg --batch --yes --passphrase "$GPG_PASSPHRASE" \
+            --pinentry-mode loopback \
+            --detach-sign --armor ./images/sha256sum.txt
+          mv ./images/sha256sum.txt.asc ./images/sha256sum.txt.gpg
+
+      - name: Install rclone
+        run: curl https://rclone.org/install.sh | sudo bash
 
       - name: Configure rclone for R2
         env:
