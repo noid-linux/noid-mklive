@@ -128,10 +128,10 @@ strings:
     versionedName:       Noid GNU/Linux (Rolling)
     shortVersionedName:  Noid (Rolling)
     bootloaderEntryName: Noid
-    productUrl:          https://git.ch-naseem.com/noid-linux
+    productUrl:          https://noid-linux.github.io/
     supportUrl:          https://matrix.to/#/#noid-support:ch-naseem.com
-    knownIssuesUrl:      https://git.ch-naseem.com/noid-linux/noid-mklive/issues
-    releaseNotesUrl:     https://git.ch-naseem.com/noid-linux/noid-mklive/releases
+    knownIssuesUrl:      https://github.com/noid-linux/noid-mklive/issues
+    releaseNotesUrl:     https://noid-linux.github.io/
     donateUrl:           https://ch-naseem.com
 
 # These images are loaded from the branding module directory.
