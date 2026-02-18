@@ -166,7 +166,7 @@ build_variant() {
             SERVICES="$SERVICES dbus gdm NetworkManager polkitd"
         ;;
         kde)
-            PKGS="$PKGS $XORG_PKGS kde5 konsole dolphin NetworkManager"
+            PKGS="$PKGS $XORG_PKGS kde5 konsole dolphin kate NetworkManager"
             SERVICES="$SERVICES dbus NetworkManager sddm"
         ;;
         lxde)
