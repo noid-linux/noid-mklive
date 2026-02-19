@@ -41,6 +41,9 @@ jobs:
       - name: Clone and checkout
         uses: classabbyamp/treeless-checkout-action@v1
 
+      - name: Init submodules
+        run: git submodule update --init --recursive
+
       - name: Build live ISO
         run: ./mknoid.sh ${{ matrix.de }} /github/workspace/images/noid-${{ matrix.de }}.iso
 

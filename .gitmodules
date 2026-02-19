@@ -1,0 +1,3 @@
+[submodule "iso-profiles"]
+	path = iso-profiles
+	url = ../iso-profiles.git
