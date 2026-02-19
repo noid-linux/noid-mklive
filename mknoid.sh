@@ -15,13 +15,13 @@ xfce_pkgs="$pkgs gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-c
 case $de in
 	"xfce")
 		yes | ./mkiso.sh -a x86_64 -b "xfce" \
-			-r "$repo" -- -p "$xfce_pkgs" -I noid/xfce \
+			-r "$repo" -- -p "$xfce_pkgs" -I iso-profiles/common/ -I iso-profiles/xfce/ \
 			-C "live.autologin" -T "Noid Linux" \
 			-v "linux-lts" -o "$path"
 		;;
 	"kde"|"gnome")
 		yes | ./mkiso.sh -a x86_64 -b "$de" \
-			-r "$repo" -- -p "$pkgs" -I noid/"$de" \
+			-r "$repo" -- -p "$pkgs" -I iso-profiles/common/ -I iso-profiles/"$de"/ \
 			-C "live.autologin" -T "Noid Linux" \
 			-v "linux-lts" -o "$path"
 		;;
