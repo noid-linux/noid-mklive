@@ -9,7 +9,7 @@ fi
 de="$1"
 path="$2"
 repo="https://github.com/noid-linux/xbps-repo/releases/latest/download"
-pkgs="neovim alacritty starship brave ndpm flatpak gparted noid-welcome calamares bazaar"
+pkgs="neovim alacritty starship brave ndpm flatpak gparted noid-welcome calamares bazaar git"
 xfce_pkgs="$pkgs gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode"
 
 case $de in
