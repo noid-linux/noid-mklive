@@ -1,36 +1,23 @@
-<div align="center">
-    <img src="https://files.catbox.moe/f6vmte.jpg" alt="Banner">
-</div>
+# Noid Live Image Maker
 
 [![Build noid images](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml/badge.svg)](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml) [![Download Noid Linux](https://img.shields.io/sourceforge/dt/noid-linux.svg)](https://sourceforge.net/projects/noid-linux/files/latest/noid-xfce.iso/download)
 
-Noid Linux (Naz's Void Linux-based iso) is my personal customization of Void Linux. It's tailored to my preferences and comes with a custom XBPS repository enabled out of the box.
-
-[![Download Noid Linux](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/noid-linux/files/latest/download)
-
-## Features
-
-- **Minimal Base System**: Built on Void Linux's lightweight foundation
-- **Calamares Installer**: Graphical system installer instead of void-installer
-- **Custom XBPS Repository**: Additional packages and modifications I find useful
-- **Multiple DEs**: Available in XFCE (primary), KDE, and GNOME variants
-- **Flatpak Support**: [Bazaar](https://github.com/kolunmi/bazaar) pre-installed for easy app installation
-
-## Live System Credentials
+The Noid Linux live image maker
 
 > [!IMPORTANT]
 > **Username**: `train`  
 > **Password**: `noidlinux`
 
-The live user has sudo privileges without password prompts.
+## Building an ISO
 
-## Note on Project Scope
+```bash
+git clone --recurse-submodules https://github.com/noid-linux/noid-mklive
+./mknoid.sh xfce output.iso   # or: kde, gnome
+```
 
-This is primarily a personal project that I use for my own systems. The repository is public for reference and transparency, but I maintain it according to my own needs and preferences. While I'm happy to accept pull requests that align with the project's direction, significant changes or improvements may be better implemented by forking this project.
-
-## Screeshots
-
-![Noid Linux](https://files.catbox.moe/xectfm.jpg)
+Requires running as root inside a privileged container (or on Void
+Linux directly). See the GitHub Actions workflow in
+`.github/workflows/gen-image.yml` for the reference build environment.
 
 ## Acknowledgments
 
@@ -39,5 +26,3 @@ This is primarily a personal project that I use for my own systems. The reposito
 ## License
 
 This project is licensed under the same terms as Void Linux's void-mklive.
-
-[![Powered by Void](https://files.catbox.moe/jcqcld.gif)](https://voidlinux.org)
