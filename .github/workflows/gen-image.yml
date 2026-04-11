@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        de: [xfce, kde, gnome]
+        de: [xfce-dinit, xfce, kde, gnome]
     container:
       image: "ghcr.io/void-linux/void-mklive:20250116R1"
       options: --privileged
