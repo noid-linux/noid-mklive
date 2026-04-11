@@ -53,5 +53,10 @@ _EOF
 fi
 
 if getargbool 0 live.autologin; then
+    if [ "$INIT_SYSTEM" == "dinit" ]; then
+        sed -i "s,GETTY_ARGS=\"\$GETTY_ARGS --noclear\",GETTY_ARGS=\"\$GETTY_ARGS --noclear -a $USERNAME\",g" \
+            ${NEWROOT}/usr/lib/dinit/agetty-default
+    else
         sed -i "s,GETTY_ARGS=\"--noclear\",GETTY_ARGS=\"--noclear -a $USERNAME\",g" ${NEWROOT}/etc/sv/agetty-tty1/conf
+    fi
 fi

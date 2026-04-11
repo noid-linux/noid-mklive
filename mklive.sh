@@ -194,11 +194,20 @@ ignore_packages() {
 
 enable_services() {
     SERVICE_LIST="$*"
+
+    if [ "$INIT_SYSTEM" == "dinit" ]; then
+		SV_DIR="dinit.d"
+		SV_ENABLE_DIR="dinit.d/boot.d"
+	else
+		SV_DIR="sv"
+		SV_ENABLE_DIR="runit/runsvdir/default"
+	fi
+
     for service in $SERVICE_LIST; do
-        if ! [ -e $ROOTFS/etc/sv/$service ]; then
-            die "service $service not in /etc/sv"
+        if ! [ -e $ROOTFS/etc/$SV_DIR/$service ]; then
+            die "service $service not in /etc/$SV_DIR"
         fi
-        ln -sf /etc/sv/$service $ROOTFS/etc/runit/runsvdir/default/
+        ln -sf /etc/$SV_DIR/$service $ROOTFS/etc/$SV_ENABLE_DIR
     done
 }
 
@@ -546,7 +555,11 @@ HOST_ARCH=$(xbps-uhelper arch)
 : ${LOCALE:=en_US.UTF-8}
 : ${INITRAMFS_COMPRESSION:=xz}
 : ${SQUASHFS_COMPRESSION:=xz}
-: ${BASE_SYSTEM_PKG:=noid-base-system}
+if [ "$INIT_SYSTEM" == "dinit" ]; then
+	: ${BASE_SYSTEM_PKG:=noid-dinit-base-system}
+else
+	: ${BASE_SYSTEM_PKG:=noid-base-system}
+fi
 : ${BOOT_TITLE:="Void Linux"}
 : ${LINUX_VERSION:=linux}
 
@@ -686,9 +699,16 @@ fi
 print_step "Installing void pkgs into the rootfs: ${PACKAGE_LIST[*]} ..."
 install_packages
 
-: ${DEFAULT_SERVICE_LIST:=agetty-tty1 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6 udevd}
+if [  "$INIT_SYSTEM" != "dinit" ]; then
+	: ${DEFAULT_SERVICE_LIST:=agetty-tty1 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6 udevd}
+fi
 print_step "Enabling services: ${SERVICE_LIST} ..."
-enable_services ${DEFAULT_SERVICE_LIST} ${SERVICE_LIST}
+
+if [ "$INIT_SYSTEM" == "dinit" ]; then
+	enable_services ${SERVICE_LIST}
+else
+	enable_services ${SERVICE_LIST} ${DEFAULT_SERVICE_LIST}
+fi
 
 if [ -n "$ROOT_SHELL" ]; then
     print_step "Changing the root shell ..."
