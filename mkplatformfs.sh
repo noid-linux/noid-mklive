@@ -74,7 +74,11 @@ usage() {
 #      SCRIPT EXECUTION STARTS HERE
 # ########################################
 
-BASEPKG=noid-base-system
+if [ "$INIT_SYSTEM" == "dinit" ]; then
+	BASEPKG=noid-dinit-base-system
+else
+	BASEPKG=noid-base-system
+fi
 COMPRESSION="y"
 
 while getopts "b:p:k:c:C:r:x:o:nhV" opt; do

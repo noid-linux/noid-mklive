@@ -6,6 +6,7 @@ set -eu
 
 PROGNAME=$(basename "$0")
 ARCH=$(uname -m)
+INIT="runit"
 IMAGES="base"
 TRIPLET=
 REPO=
@@ -20,6 +21,7 @@ usage() {
 
 	OPTIONS
 	 -a <arch>     Set architecture (or platform) in the image
+	 -i <init>     Set init system (default: runit)
 	 -b <variant>  One of base, enlightenment, xfce, mate, cinnamon, gnome, kde,
 	               lxde, lxqt, or xfce-wayland (default: base). May be specified multiple times
 	               to build multiple variants
@@ -35,9 +37,10 @@ usage() {
 	EOH
 }
 
-while getopts "a:b:d:t:hr:V" opt; do
+while getopts "a:i:b:d:t:hr:V" opt; do
 case $opt in
     a) ARCH="$OPTARG";;
+	i) INIT="$OPTARG";;
     b) IMAGES="$OPTARG";;
     d) DATE="$OPTARG";;
     r) REPO="-r $OPTARG $REPO";;
@@ -123,6 +126,8 @@ build_variant() {
             ;;
     esac
 
+	export INIT_SYSTEM="$INIT"
+
     A11Y_PKGS="espeakup void-live-audio brltty"
     PKGS="dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror chrony tmux $A11Y_PKGS $GRUB_PKGS"
     FONTS="font-misc-misc terminus-font dejavu-fonts-ttf"
@@ -143,6 +148,9 @@ build_variant() {
         ;;
         xfce*)
             PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter xfce4 gnome-themes-standard gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 xfce4-pulseaudio-plugin"
+            if [ "$INIT_SYSTEM" == "dinit" ]; then
+				PKGS="$PKGS dbus-dinit lightdm-dinit NetworkManager-dinit polkit-dinit openssh-dinit chrony-dinit"
+            fi
             SERVICES="$SERVICES dbus lightdm NetworkManager polkitd"
             LIGHTDM_SESSION=xfce
 
