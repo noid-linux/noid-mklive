@@ -91,7 +91,7 @@ VAI_install_base_system() {
         _grub="${_grub} grub-x86_64-efi"
     fi
 
-    if [ "$INIT_SYSTEM" == "dinit" ] ; then
+	if [ "$(getarg noid.init_system)" = "dinit" ]; then
 		XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-dinit-base-system ${_grub}
 	else
 		XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-base-system ${_grub}
