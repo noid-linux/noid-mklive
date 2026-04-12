@@ -545,6 +545,10 @@ XBPS_REPOSITORY="$XBPS_REPOSITORY --repository=https://github.com/noid-linux/xbp
 # Configure dracut to use overlayfs for the writable overlay.
 BOOT_CMDLINE="$BOOT_CMDLINE rd.live.overlay.overlayfs=1 "
 
+if [ "$INIT_SYSTEM" = "dinit" ]; then
+    BOOT_CMDLINE="$BOOT_CMDLINE noid.init_system=dinit"
+fi
+
 HOST_ARCH=$(xbps-uhelper arch)
 
 # Set defaults
