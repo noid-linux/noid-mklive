@@ -92,7 +92,7 @@ VAI_install_base_system() {
     fi
 
 	if [ "$(getarg noid.init_system)" = "dinit" ]; then
-		XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-dinit-base-system ${_grub}
+		XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-base-system-dinit ${_grub}
 	else
 		XBPS_ARCH="${XBPS_ARCH}" xbps-install -Sy -R "${xbpsrepository}" -r /mnt noid-base-system ${_grub}
 	fi

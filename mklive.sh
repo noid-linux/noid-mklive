@@ -560,7 +560,7 @@ HOST_ARCH=$(xbps-uhelper arch)
 : ${INITRAMFS_COMPRESSION:=xz}
 : ${SQUASHFS_COMPRESSION:=xz}
 if [ "$INIT_SYSTEM" == "dinit" ]; then
-	: ${BASE_SYSTEM_PKG:=noid-dinit-base-system}
+	: ${BASE_SYSTEM_PKG:=noid-base-system-dinit}
 else
 	: ${BASE_SYSTEM_PKG:=noid-base-system}
 fi
