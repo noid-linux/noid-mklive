@@ -75,7 +75,7 @@ usage() {
 # ########################################
 
 if [ "$INIT_SYSTEM" == "dinit" ]; then
-	BASEPKG=noid-dinit-base-system
+	BASEPKG=noid-base-system-dinit
 else
 	BASEPKG=noid-base-system
 fi
