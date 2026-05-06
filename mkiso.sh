@@ -139,7 +139,12 @@ build_variant() {
 
     case $variant in
         base)
-            SERVICES="$SERVICES dhcpcd wpa_supplicant acpid"
+            if [ "$INIT_SYSTEM" == "dinit" ]; then
+				PKGS="$PKGS openssh-dinit chrony-dinit dhcpcd-dinit wpa_supplicant-dinit"
+				SERVICES="$SERVICES dhcpcd wpa_supplicant"
+			else
+				SERVICES="$SERVICES dhcpcd wpa_supplicant acpid"
+            fi
         ;;
         enlightenment)
             PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk-greeter enlightenment terminology udisks2"
