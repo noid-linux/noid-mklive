@@ -13,6 +13,11 @@ pkgs="neovim alacritty starship brave ndpm flatpak gparted noid-welcome calamare
 xfce_pkgs="$pkgs gruvbox-material-theme gruvbox-bibata-cursor-theme nerd-fonts-cascadiacode"
 
 case $de in
+	"base-dinit")
+		./mkiso.sh -a x86_64 -b "base" -i "dinit" \
+			-r "$repo" -- -C "live.autologin" -T "Noid Linux" \
+			-v "linux-mainline" -o "$path"
+		;;
 	"xfce-dinit")
 		./mkiso.sh -a x86_64 -b "xfce" -i "dinit" \
 			-r "$repo" -- -p "$xfce_pkgs" -I iso-profiles/common/ -I iso-profiles/xfce/ \
