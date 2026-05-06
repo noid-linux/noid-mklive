@@ -80,11 +80,9 @@ jobs:
       - name: Sign checksums
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          gpg --batch --yes --passphrase "$GPG_PASSPHRASE" \
-            --pinentry-mode loopback \
+          gpg --batch --yes --pinentry-mode loopback \
             --detach-sign --armor ./images/sha256sum.txt
           mv ./images/sha256sum.txt.asc ./images/sha256sum.txt.gpg
 
