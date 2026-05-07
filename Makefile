@@ -33,7 +33,7 @@ ALL_WSL=$(foreach arch,$(WSL_ARCHS),void-$(arch)-$(DATECODE).wsl)
 
 SUDO := sudo
 
-REPOSITORY := https://repo-default.voidlinux.org/current
+REPOSITORY := https://repo-fastly.voidlinux.org/current
 XBPS_REPOSITORY := -r $(REPOSITORY) -r $(REPOSITORY)/musl -r $(REPOSITORY)/aarch64
 COMPRESSOR_THREADS:=$(shell nproc)
 

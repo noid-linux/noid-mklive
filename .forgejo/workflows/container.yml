@@ -1,0 +1,42 @@
+name: Build container
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Build tag"
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ forgejo.workflow }}-${{ forgejo.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Forgejo registry
+        run: |
+          podman login git.ch-naseem.com \
+            --username ndpm13 \
+            --password ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: Build image
+        run: |
+          podman build \
+            --tag git.ch-naseem.com/${{ forgejo.repository }}:${{ forgejo.event.inputs.tag }} \
+            --tag git.ch-naseem.com/${{ forgejo.repository }}:latest \
+            container/.
+
+      - name: Push image
+        run: |
+          podman push 127.0.0.1:3000/${{ forgejo.repository }}:${{ forgejo.event.inputs.tag }}
+          podman push 127.0.0.1:3000/${{ forgejo.repository }}:latest

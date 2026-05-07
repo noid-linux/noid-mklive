@@ -1,10 +1,11 @@
-FROM ghcr.io/void-linux/void-glibc-full:latest
+FROM ghcr.io/void-linux/void-mklive:latest
 
-ARG MIRROR="https://repo-default.voidlinux.org/"
+ARG MIRROR="https://repo-fastly.voidlinux.org/"
 
 RUN xbps-install -SyuR "${MIRROR}/current" xbps \
 	&& xbps-install -yuR "${MIRROR}/current" \
-	&& xbps-install -yuR "${MIRROR}/current" \
-		bash make git kmod xz lzo qemu-user-arm qemu-user-aarch64 binfmt-support outils dosfstools e2fsprogs
+	&& xbps-install -yR "${MIRROR}/current" nodejs \
+	&& xbps-remove -Oo \
+	&& rm -rf /var/cache/xbps/*
 
-CMD ["/bin/sh"]
+CMD ["/bin/bash"]

@@ -240,7 +240,7 @@ VAI_configure_autoinstall() {
             xbpsrepository="https://repo-default.voidlinux.org/current/musl"
             ;;
         *)
-            xbpsrepository="https://repo-default.voidlinux.org/current"
+            xbpsrepository="https://repo-fastly.voidlinux.org/current"
             ;;
     esac
 

@@ -1,0 +1,91 @@
+name: Build Noid images
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ forgejo.workflow }}-${{ forgejo.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: write
+
+jobs:
+  build-live-iso:
+    name: Build Live ISO (${{ matrix.de }})
+    runs-on: noid-mklive
+    strategy:
+      matrix:
+        de: [xfce-dinit]
+    container:
+      options: --privileged
+      volumes:
+        - /dev:/dev
+      env:
+        PATH: "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/sbin:/usr/local/bin:/tmp/bin"
+
+    steps:
+      - name: Prepare container
+        shell: sh
+        run: |
+          # switch to repo-fastly mirror
+          mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+          sed -i 's|repo-default|repo-fastly|g' /etc/xbps.d/*-repository-*.conf
+          # system update
+          xbps-install -Syu xbps && xbps-install -yu
+          # install dependencies
+          xbps-install -y nodejs
+
+      - name: Create output directory
+        run: |
+          mkdir -p /forgejo/workspace/images
+
+      - name: Clone and checkout
+        uses: github.com/classabbyamp/treeless-checkout-action@v1
+
+      - name: Init submodules
+        run: git submodule update --init --recursive
+
+      - name: Build live ISO
+        run: ./mknoid.sh ${{ matrix.de }} /forgejo/workspace/images/noid-${{ matrix.de }}.iso
+
+      - name: Upload built ISO
+        uses: https://data.forgejo.org/actions/upload-artifact@v7
+        with:
+          name: noid-${{ matrix.de }}-iso
+          path: /forgejo/workspace/images/*.iso
+          retention-days: 1
+
+  create-forgejo-release:
+    needs: build-live-iso
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built packages
+        uses: data.forgejo.org/actions/download-artifact@v4
+        with:
+          pattern: noid-*-iso
+          path: ./images/
+          merge-multiple: true
+
+      - name: Create release tag
+        id: create_tag
+        run: |
+          # Get current date in YYYYMMDD format
+          DATE=$(date +"%Y%m%d")
+          echo "release_tag=noid-linux-${DATE}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: data.forgejo.org/actions/forgejo-release@v2.11.3
+        env:
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+        with:
+          direction: upload
+          url: https://git.ch-naseem.com
+          tag: ${{ steps.create_tag.outputs.release_tag }}
+          release-dir: ./images/*
+          prerelease: true
+          draft: true
