@@ -1,0 +1,42 @@
+name: Build Noid images
+
+on:
+  push:
+    branches:
+      - "forgejo"
+
+concurrency:
+  group: ${{ forgejo.workflow }}-${{ forgejo.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-live-iso:
+    runs-on: void-mklive
+    steps:
+      - name: Prepare container
+        shell: sh
+        run: |
+          # switch to fastly mirror
+          mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+          sed -i 's|repo-default|repo-fastly|g' /etc/xbps.d/*-repository-*.conf
+          # install dependencies
+          xbps-install -Syu xbps && xbps-install -yu && xbps-install -y curl
+
+      - name: Clone and checkout
+        uses: https://github.com/classabbyamp/treeless-checkout-action@v1
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Build live ISO
+        run: ./mknoid.sh xfce-dinit ~/noid-xfce-dinit.iso
+
+      - name: Upload artifacts
+        run: |
+          curl --user ndpm13:${{ secrets.REGISTRY_TOKEN }} \
+            --upload-file /root/noid-xfce-dinit.iso \
+            https://forge.ch-naseem.com/api/packages/noid-linux/generic/noid-iso/0.0.1/noid-xfce-dinit.iso
