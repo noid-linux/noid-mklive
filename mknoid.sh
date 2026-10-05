@@ -21,20 +21,17 @@ case $de in
 	"xfce-dinit")
 		./mkiso.sh -a x86_64 -b "xfce" -i "dinit" \
 			-r "$repo" -- -p "$xfce_pkgs" -I iso-profiles/common/ -I iso-profiles/xfce/ \
-			-C "live.autologin" -T "Noid Linux" \
-			-v "linux-lts" -o "$path"
+			-C "live.autologin" -T "Noid Linux" -o "$path"
 		;;
 	"xfce")
 		yes | ./mkiso.sh -a x86_64 -b "xfce" \
 			-r "$repo" -- -p "$xfce_pkgs" -I iso-profiles/common/ -I iso-profiles/xfce/ \
-			-C "live.autologin" -T "Noid Linux" \
-			-v "linux-lts" -o "$path"
+			-C "live.autologin" -T "Noid Linux" -o "$path"
 		;;
 	"kde"|"gnome")
 		yes | ./mkiso.sh -a x86_64 -b "$de" \
 			-r "$repo" -- -p "$pkgs" -I iso-profiles/common/ -I iso-profiles/"$de"/ \
-			-C "live.autologin" -T "Noid Linux" \
-			-v "linux-lts" -o "$path"
+			-C "live.autologin" -T "Noid Linux" -o "$path"
 		;;
 	*)
 		echo "Error: Unknown desktop environment '$de'"
