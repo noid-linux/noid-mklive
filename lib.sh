@@ -324,9 +324,9 @@ rk33xx_flash_uboot() {
 
 # These should all resolve even if they won't have the appropriate
 # repodata files for the selected architecture.
-: "${XBPS_REPOSITORY:=--repository=https://repo-default.voidlinux.org/current \
-                      --repository=https://repo-default.voidlinux.org/current/musl \
-                      --repository=https://repo-default.voidlinux.org/current/aarch64}"
+: "${XBPS_REPOSITORY:=--repository=https://repo-fastly.voidlinux.org/current \
+                      --repository=https://repo-fastly.voidlinux.org/current/musl \
+                      --repository=https://repo-fastly.voidlinux.org/current/aarch64}"
 
 # This library is the authoritative source of the platform map,
 # because of this we may need to get this information from the command

@@ -1,6 +1,6 @@
 FROM ghcr.io/void-linux/void-glibc-full:latest
 
-ARG MIRROR="https://repo-default.voidlinux.org/"
+ARG MIRROR="https://repo-fastly.voidlinux.org/"
 
 RUN xbps-install -SyuR "${MIRROR}/current" xbps \
 	&& xbps-install -yuR "${MIRROR}/current" \
