@@ -1,0 +1,3 @@
+[submodule "iso-profiles"]
+	path = iso-profiles
+	url = https://github.com/noid-linux/iso-profiles.git
