@@ -28,8 +28,8 @@ umask 022
 
 . ./lib.sh
 
-REQUIRED_PKGS=(base-files libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
-TARGET_PKGS=(base-files)
+REQUIRED_PKGS=(libgcc dash coreutils sed tar gawk squashfs-tools xorriso)
+TARGET_PKGS=()
 INITRAMFS_PKGS=(binutils xz device-mapper dhclient dracut-network openresolv)
 PACKAGE_LIST=(jq)
 IGNORE_PKGS=()
@@ -82,6 +82,7 @@ usage() {
 	OPTIONS
 	 -a <arch>          Set XBPS_ARCH in the ISO image
 	 -b <system-pkg>    Set an alternative base package (default: base-system)
+	 -f <system-files>  Set an alternative base files package (default: base-files)
 	 -r <repo>          Use this XBPS repository. May be specified multiple times
 	 -c <cachedir>      Use this XBPS cache directory (default: ./xbps-cachedir-<arch>)
 	 -H <host_cachedir> Use this Host XBPS cache directory (default: ./xbps-cachedir-<host_arch>)
@@ -160,8 +161,8 @@ install_packages() {
         ${XBPS_REPOSITORY} -c "$XBPS_CACHEDIR" -y "${PACKAGE_LIST[@]}" "${INITRAMFS_PKGS[@]}"
     [ $? -ne 0 ] && die "Failed to install ${PACKAGE_LIST[*]} ${INITRAMFS_PKGS[*]}"
 
-    xbps-reconfigure -r "$ROOTFS" -f base-files >/dev/null 2>&1
-    chroot "$ROOTFS" env -i xbps-reconfigure -f base-files
+    xbps-reconfigure -r "$ROOTFS" -f ${BASE_FILES_PKG} >/dev/null 2>&1
+    chroot "$ROOTFS" env -i xbps-reconfigure -f ${BASE_FILES_PKG}
 
     # Enable choosen UTF-8 locale and generate it into the target rootfs.
     if [ -f "$ROOTFS"/etc/default/libc-locales ]; then
@@ -502,10 +503,11 @@ generate_iso_image() {
 #
 # main()
 #
-while getopts "a:b:r:H:c:C:T:Kk:l:i:I:S:e:s:o:p:g:v:P:x:Vh" opt; do
+while getopts "a:b:f:r:H:c:C:T:Kk:l:i:I:S:e:s:o:p:g:v:P:x:Vh" opt; do
 	case $opt in
 		a) TARGET_ARCH="$OPTARG";;
 		b) BASE_SYSTEM_PKG="$OPTARG";;
+		f) BASE_FILES_PKG="$OPTARG";;
 		r) XBPS_REPOSITORY="--repository=$OPTARG $XBPS_REPOSITORY";;
 		c) XBPS_CACHEDIR="$OPTARG";;
 		H) XBPS_HOST_CACHEDIR="$OPTARG";;
@@ -547,8 +549,12 @@ HOST_ARCH=$(xbps-uhelper arch)
 : ${INITRAMFS_COMPRESSION:=xz}
 : ${SQUASHFS_COMPRESSION:=xz}
 : ${BASE_SYSTEM_PKG:=base-system}
+: ${BASE_FILES_PKG:=base-files}
 : ${BOOT_TITLE:="Void Linux"}
 : ${LINUX_VERSION:=linux}
+
+REQUIRED_PKGS+=("$BASE_FILES_PKG")
+TARGET_PKGS+=("$BASE_FILES_PKG")
 
 XBPS_TARGET_ARCH="$TARGET_ARCH" register_binfmt
 
