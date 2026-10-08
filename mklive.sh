@@ -195,11 +195,20 @@ ignore_packages() {
 
 enable_services() {
     SERVICE_LIST="$*"
+
+    if [ "$BASE_SYSTEM_PKG" == "noid-base-system-dinit" ]; then
+		SV_DIR="dinit.d"
+		SV_ENABLE_DIR="dinit.d/boot.d"
+	else
+		SV_DIR="sv"
+		SV_ENABLE_DIR="runit/runsvdir/default"
+	fi
+
     for service in $SERVICE_LIST; do
-        if ! [ -e $ROOTFS/etc/sv/$service ]; then
-            die "service $service not in /etc/sv"
+        if ! [ -e $ROOTFS/etc/$SV_DIR/$service ]; then
+            die "service $service not in /etc/$SV_DIR"
         fi
-        ln -sf /etc/sv/$service $ROOTFS/etc/runit/runsvdir/default/
+        ln -sf /etc/$SV_DIR/$service $ROOTFS/etc/$SV_ENABLE_DIR
     done
 }
 
@@ -694,7 +703,11 @@ install_packages
 
 : ${DEFAULT_SERVICE_LIST:=agetty-tty1 agetty-tty2 agetty-tty3 agetty-tty4 agetty-tty5 agetty-tty6 udevd}
 print_step "Enabling services: ${SERVICE_LIST} ..."
-enable_services ${DEFAULT_SERVICE_LIST} ${SERVICE_LIST}
+if [ "$BASE_SYSTEM_PKG" == "noid-base-system-dinit" ]; then
+	enable_services ${SERVICE_LIST}
+	else
+	enable_services ${DEFAULT_SERVICE_LIST} ${SERVICE_LIST}
+fi
 
 if [ -n "$ROOT_SHELL" ]; then
     print_step "Changing the root shell ..."
