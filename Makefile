@@ -1,3 +1,5 @@
+-include noid.mk
+
 DATECODE:=$(shell date -u "+%Y%m%d")
 SHELL=/bin/bash
 
