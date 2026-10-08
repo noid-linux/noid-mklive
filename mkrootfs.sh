@@ -219,11 +219,11 @@ run_cmd_chroot "$ROOTFS" "xbps-reconfigure -a"
 # chrooted.  We also remove the lock file in this step to clean up the
 # lock on the passwd database, lest it be left in the system and
 # propogated to other points.
-info_msg "Setting the default root password ('voidlinux')"
+info_msg "Setting the default root password ('noidlinux')"
 if [ ! -f "$ROOTFS/etc/shadow" ] ; then
     run_cmd_chroot "$ROOTFS" pwconv
 fi
-echo root:voidlinux | run_cmd_chroot "$ROOTFS" "chpasswd -c SHA512" || die "Could not set default credentials"
+echo root:noidlinux | run_cmd_chroot "$ROOTFS" "chpasswd -c SHA512" || die "Could not set default credentials"
 rm -f "$ROOTFS/etc/.pwd.lock"
 
 # At this point we're done running things in the chroot and we can
