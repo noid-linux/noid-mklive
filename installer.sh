@@ -1378,7 +1378,7 @@ Root partition not empty! Aborting..." ${MSGBOXSIZE}
         # Remove live user.
         echo "Removing $USERNAME live user from targetdir ..." >$LOG
         chroot $TARGETDIR userdel -r $USERNAME >$LOG 2>&1
-        rm -f $TARGETDIR/etc/sudoers.d/99-void-live
+        rm -f $TARGETDIR/etc/sudoers.d/99-noid-live
         sed -i "s,GETTY_ARGS=\"--noclear -a $USERNAME\",GETTY_ARGS=\"--noclear\",g" $TARGETDIR/etc/sv/agetty-tty1/conf
         TITLE="Check $LOG for details ..."
         INFOBOX "Rebuilding initramfs for target ..." 4 60
@@ -1472,7 +1472,7 @@ Root partition not empty! Aborting..." ${MSGBOXSIZE}
     fi
 
     # clean up polkit rule - it's only useful in live systems
-    rm -f $TARGETDIR/etc/polkit-1/rules.d/void-live.rules
+    rm -f $TARGETDIR/etc/polkit-1/rules.d/noid-live.rules
 
     # enable text console for grub if chosen
     if [ "$(get_option TEXTCONSOLE)" = "1" ]; then
