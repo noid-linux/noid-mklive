@@ -1,8 +1,24 @@
-# Noid Live Image Maker
-
-[![Build noid images](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml/badge.svg)](https://github.com/noid-linux/noid-mklive/actions/workflows/gen-images.yml) [![Download Noid Linux](https://img.shields.io/sourceforge/dt/noid-linux.svg)](https://sourceforge.net/projects/noid-linux/files/latest/noid-xfce.iso/download)
-
-The Noid Linux live image maker
+<div align="center">
+	<img
+		src="https://github.com/noid-linux/.github/blob/main/assets/noid-logo.png?raw=true"
+		width="128"
+		alt="Noid Linux logo"
+	/>
+	<br />
+	<h1 align="center">The Noid Linux live image generator</h1>
+	<p align="center">
+		<a href="https://noid-linux.github.io"><b>Website</b></a>
+		-
+		<a href="https://noid-linux.github.io/download/"
+			><b>Download pre-built ISOs</b></a
+		>
+		-
+		<a href="https://matrix.to/#/#noid-support:ch-naseem.com"
+			><b>Community</b></a
+		>
+		- <a href="https://noid-linux.github.io/donate/"><b>Donate</b></a>
+	</p>
+</div>
 
 > [!IMPORTANT]
 > **Username**: `train`  
@@ -14,4 +30,7 @@ The Noid Linux live image maker
 
 ## License
 
-This project is licensed under the same terms as Void Linux's void-mklive.
+This project is licensed under the same terms as
+[void-mklive][void-mklive]. See the `COPYING` file for details.
+
+[void-mklive]: https://github.com/void-linux/void-mklive
